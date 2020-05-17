@@ -2,7 +2,7 @@
 title: PicoCTF Best Shell Challenge
 author: 4sploit
 date: 2020-05-17 18:20:00 +0300
-categories: []
+categories: [tutorial]
 tags: [ctf, challenges, binary exploitation]
 ---
 In this tutorial, i am going to solve "best shell" challenge from PicoCTF 2014.
