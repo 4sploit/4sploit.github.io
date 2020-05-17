@@ -40,12 +40,6 @@ layout: compress
       "density": "2.0"
     },
     {
-      "src": "{{ icon_url }}/android-chrome-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "density": "3.0"
-    },
-    {
       "src": "{{ icon_url }}/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
