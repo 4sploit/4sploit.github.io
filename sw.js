@@ -4,7 +4,7 @@ layout: compress
 
 self.importScripts('{{ "/assets/data/cache-list.js" | relative_url }}');
 
-var cacheName = 'chirpy-{{ "now" | date: "%Y%m%d.%H%M" }}';
+var cacheName = 'mahmod-{{ "now" | date: "%Y%m%d.%H%M" }}';
 
 
 function isExcluded(url) {
