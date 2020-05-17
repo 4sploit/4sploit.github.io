@@ -1,0 +1,4 @@
+#  The date format
+
+tooltip: "%a, %b %e, %Y, %l:%M %p"
+post: "%b %e, %Y"
