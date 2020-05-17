@@ -20,7 +20,8 @@ In lines 149-153, the program opens a file named password.txt for reading which 
 
 In lines 155-157, the program reads the content of the file and stores it into an array of chars named admin_password, it then closes the file.
 
-In lines 159-160, the program calls two functions, one to initialize an array of structs (struct data type), the struct prototype looks as follows:  
+In lines 159-160, the program calls two functions, one to initialize an array of structs (struct data type), the struct prototype looks as follows:
+
 ![input handler struct]({{ "/assets/img/posts/picoctf-best-shell-challenge/3.png" | relative_url }})
 
 Here we can see that the struct consists of 2 variables, a char array named cmd and a pointer to function named handler.
