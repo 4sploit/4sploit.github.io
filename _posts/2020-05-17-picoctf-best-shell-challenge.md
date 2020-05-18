@@ -81,7 +81,7 @@ The problem here is that we need to guess the password in order to spawn the she
 ```console
 $ python -c "print('rename lol ' + 'A'*32 + 'B' * 4 + '\n' + 'A'*32 + 'B' * 4 + ' test\n')" > payload
 ```
-Then we run the binary and send the payload file content as input using the command run < payload\
+Then we run the binary and send the payload file content as input using the command run < payload
 And finally we use the command disas shell_handler to disassemble shell_handler function
 ![best shell exploitation]({{ "/assets/img/posts/picoctf-best-shell-challenge/12.png" | relative_url }})
 
