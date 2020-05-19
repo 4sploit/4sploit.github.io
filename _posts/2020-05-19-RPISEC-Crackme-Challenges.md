@@ -13,17 +13,17 @@ In this tutorial, i am going to solve crackme challenges from RPISEC.
 
 As you can see, we're required to enter a correct password for the success message to be displayed.
 
-We launch the binary using edb debugger and then press run once to point to main function:\
+We launch the binary using edb debugger and then press run once to point to main function:  
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x00a/2.PNG" | relative_url }})
 
-We notice c functions such as printf, scanf, strcmp.\
+We notice c functions such as printf, scanf, strcmp.  
 We're concerned about the code section following scanf function call,
 Since scanf function reads the data we input from keyboard, in our case it's
 the password, following that is the logic concerning the inputted password.
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x00a/3.PNG" | relative_url }})
 
-Here we notice strcmp function and the string "g00dJ0B!".\
+Here we notice strcmp function and the string "g00dJ0B!".  
 We can see that both the inputted password and "g00dJ0B!" string are being loaded
 into the stack as arguments to strcmp function which basically compares between
 2 given strings. 
@@ -46,10 +46,10 @@ Excellent, we successfully reached success message by entering the correct passw
 
 We execute the binary and type a random password.
 
-We launch the binary using edb debugger and then press run once to point to main function:\
+We launch the binary using edb debugger and then press run once to point to main function:  
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x00b/2.PNG" | relative_url }})
 
-As with the previous crackme challenge, here we can also notice c functions such as printf, scanf, etc..\
+As with the previous crackme challenge, here we can also notice c functions such as printf, scanf, etc..  
 We notice wcscmp function which compares between 2 given strings, it expects wide strings unlike strcmp function.
 
 
@@ -77,7 +77,7 @@ As you can see, this is how our inputted value looks like in the stack.
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x00b/8.PNG" | relative_url }})
 
 We notce "mov dword [esp], 0x804a040" instruction which loads the other string (the correct password)
-into the stack.\
+into the stack.  
 So wcscmp functions expects our inputted value and the correct password as arguments, compares them, if there's a match, it outputs
 success message.
 
@@ -104,14 +104,14 @@ Excellent, we successfully reached success message by entering the correct passw
 
 We execute the binary and type a random password.
 
-We launch the binary using edb debugger and then press run once to point to main function:\
+We launch the binary using edb debugger and then press run once to point to main function:  
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x01/2.PNG" | relative_url }})
 
 Same as previous challenges with the exception of comparison mechanism.
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x01/3.PNG" | relative_url }})
 
-The comparison here is done using cmp instruction instead of c function as we saw in the previous challenges.\
+The comparison here is done using cmp instruction instead of c function as we saw in the previous challenges.  
 Our inputted password is being loaded directly from the stack without using registers, the other operand
 is 0x149a which is the correct password in hexadecimal representation.
 
@@ -119,7 +119,7 @@ is 0x149a which is the correct password in hexadecimal representation.
 
 Here we convert the correct password 149a from hexadecimal to decimal value which is 5274.
 
-We run the binary then type 5274 as the password as follows:\
+We run the binary then type 5274 as the password as follows:  
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x01/5.PNG" | relative_url }})
 
 Excellent, we successfully reached success message by entering the correct password 5274.
@@ -133,7 +133,7 @@ Excellent, we successfully reached success message by entering the correct passw
 
 We execute the binary and type a random password.
 
-We launch the binary using edb debugger and then press run once to point to main function:\
+We launch the binary using edb debugger and then press run once to point to main function:  
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x02/2.PNG" | relative_url }})
 
 Same as previous challenges with the exception of comparison mechanism.
@@ -144,7 +144,7 @@ We set a breakpoint right after scanf function call, run it, then notice the tri
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x02/4.PNG" | relative_url }})
 
-We step forward until we reach the comparison instruction cmp eax, [ebp-0xc].\
+We step forward until we reach the comparison instruction cmp eax, [ebp-0xc].  
 The comparison here is done using cmp directly as the previous challenge, the difference here
 is that eax holds our inputted password and the correct password is being loaded from the stack.
 
@@ -156,7 +156,7 @@ We notice the highlighted value 52b24 in the stack which is located at ebp-0xc a
 
 We convert it to decimal as the previous challenge, the decimal value is 338724.
 
-We run the binary then type 338724 as the password as follows:\
+We run the binary then type 338724 as the password as follows:  
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x02/7.PNG" | relative_url }})
 
 Excellent, we successfully reached success message by entering the correct password 338724.
@@ -182,7 +182,7 @@ We set a breakpoint on test function then run the binary.
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x03/4.PNG" | relative_url }})
 
-By stepping into test function we can inspect the function body as seen in the above figure.\
+By stepping into test function we can inspect the function body as seen in the above figure.  
 Fortunately we found the comparison cmp instruction.
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x03/5.PNG" | relative_url }})
@@ -199,10 +199,10 @@ We calculate the correct address of the password (ebp+0xc).
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x03/8.PNG" | relative_url }})
 
-We notice the highlighted value which happens to be the correct password in hex (52b24).\
+We notice the highlighted value which happens to be the correct password in hex (52b24).  
 We already converted it in the previous challenge, the password is 338724.
 
-We run the binary then type 338724 as the password as follows:\
+We run the binary then type 338724 as the password as follows:  
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x03/10.PNG" | relative_url }})
 
 Excellent, we successfully reached success message by entering the correct password 5274.
@@ -226,18 +226,18 @@ We set a breakpoint on check function call then run the binary.
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x04/4.PNG" | relative_url }})
 
-By stepping into check function we can see the function's body.\
+By stepping into check function we can see the function's body.  
 Initially, the function uses C builtin strlen function which calculates the length of given string,
-in our case, the length of our inputted password.\
-For instance, if we type test as the password, strlen returns 4.\
+in our case, the length of our inputted password.  
+For instance, if we type test as the password, strlen returns 4.  
 
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x04/5.PNG" | relative_url }})
 
-We notice the comparison instruction cmp dword [ebp-8], 0xf\
+We notice the comparison instruction cmp dword [ebp-8], 0xf  
 So Basically, The password length must at least be 15 (f hex is 15 decimal) in order to reach success message.
 
-We run the binary then type any 15 digits password as follows:\
+We run the binary then type any 15 digits password as follows:  
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x04/6.PNG" | relative_url }})
 
 
@@ -259,13 +259,13 @@ We set a breakpoint on check function call then run the binary.
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x05/4.PNG" | relative_url }})
 
-We stepped into check function.\
-Briefly, the function sums the digits then expects the sum to be equal to 10 hex (16 decimal).\
+We stepped into check function.  
+Briefly, the function sums the digits then expects the sum to be equal to 10 hex (16 decimal).  
 Example of correct passwords can be 961, 664.
 
 In case a correct password is entered, the check function calls parell function.
 
-We step into parell function as follows:\
+We step into parell function as follows:  
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x05/6.PNG" | relative_url }})
 
 We notice and eax, 1 instruction which indicates that the inputted password must be even.
@@ -296,7 +296,7 @@ We set a breakpoint on check function call then run the binary.
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x06/4.PNG" | relative_url }})
 
-We stepped into check function.\
+We stepped into check function.  
 As previous challenge, both conditions must be met.
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x06/5.PNG" | relative_url }})
@@ -317,7 +317,7 @@ We set a breakpoint on dummy function.
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x06/9.PNG" | relative_url }})
 
-We notice strncmp function which compares between 2 given functions up to n characters.\
+We notice strncmp function which compares between 2 given functions up to n characters.  
 We step forward until strncmp instruction.
 
 ![main function]({{ "/assets/img/posts/rpisec-Crackme-Challenges/crackme0x06/10.PNG" | relative_url }})
