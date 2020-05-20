@@ -17,7 +17,7 @@ Since we're dealing with a .NET application, we can use dnspy to decompile it.
 We launch the application using dnspy as follows:  
 ![]({{ "/assets/img/posts/sectalks-brisbane-ctf-cracknet-crackme-challenge/2.PNG" | relative_url }})
 
-Next, we select Program Class in ctf.sectalks_bne.crackme assembly as follows:  
+Next, we select Program Class in ctf.sectalks_bne.crackme namespace as follows:  
 ![]({{ "/assets/img/posts/sectalks-brisbane-ctf-cracknet-crackme-challenge/3.PNG" | relative_url }})
 
 In C# (as the case with other programming languages), the starting function is called Main,
