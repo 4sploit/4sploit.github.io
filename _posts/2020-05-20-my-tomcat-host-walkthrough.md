@@ -126,7 +126,7 @@ We then upload it using **upload** command through the meterpreter shell we prev
 We change file permission to root using the command **chmod 777 finalPayload.jar** as shown here:
 ![]({{ "/assets/img/posts/my-tomcat-host-walkthrough/18.png" | relative_url }})
 
-Now We set up a listener on port 12345:
+Now we set up a listener on port 12345:
 ![]({{ "/assets/img/posts/my-tomcat-host-walkthrough/22.png" | relative_url }})
 
 Then we execute our generated java package using java command as follows:
