@@ -3,7 +3,7 @@ title: My Tomcat Host Walkthrough
 author: 4sploit
 date: 2020-05-20 17:00:00 +0300
 categories: [tutorial]
-tags: [ctf, penetration testing, metasploit, privilege escalation]
+tags: [ctf, penetration testing, metasploit, privilege escalation, vulnhub]
 ---
 This is a step-by-step walkthrough of "my tomcat host 1" vulnhub machine.
 
