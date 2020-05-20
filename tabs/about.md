@@ -11,3 +11,5 @@ title: About
 <div>A software engineer with more than 2 years of experience.</div>
 <div>A freelance penetration tester.</div>
 <div>Hope you find my posts useful :)</div>
+<br />
+[Click Here](/assets/data/cv.pdf){:target="_blank"} To Download My CV.
