@@ -22,6 +22,15 @@ avatar: /assets/img/sample/profile.jfif   # support internet resources
 github:
   username: 4sploit             # change to your github username
 
+linkedin:
+  username: 4sploit             # change to your linkedin username
+
+pinterest:
+  username: 4sploit             # change to your linkedin username
+
+goodreads:
+  username: 4sploit             # change to your linkedin username
+
 twitter:
   username: twitter_username            # change to your twitter username
 
