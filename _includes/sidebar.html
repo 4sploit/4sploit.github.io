@@ -64,6 +64,10 @@
     <i class="fab fa-linkedin"></i>
   </a>
 
+  <a href="https://linkedin.com/in/{{ site.twitter.username }}" target="_blank" rel="noopener">
+    <i class="fab fa-twitter"></i>
+  </a>
+
   <a href="https://www.goodreads.com/{{ site.goodreads.username }}" target="_blank" rel="noopener">
     <i class="fab fa-goodreads"></i>
   </a>
@@ -72,10 +76,10 @@
     <i class="fab fa-pinterest"></i>
   </a>
 
-  {% assign email = site.social.email | split: '@' %}
+ <!-- {% assign email = site.social.email | split: '@' %}
   <a href="javascript:window.open('mailto:' + ['{{ email[0] }}','{{ email[1] }}'].join('@'))" target="_blank">
     <i class="fas fa-envelope"></i>
-  </a>
+  </a> -->
   <!-- <a href="{{ site.baseurl }}/feed.xml" target="_blank">
     <i class="fas fa-rss"></i>
   </a> -->
