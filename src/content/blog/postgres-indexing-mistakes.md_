@@ -1,0 +1,76 @@
+---
+title: 'Five Postgres indexing mistakes I keep seeing'
+description: 'A billion-row education in what the query planner actually does with your indexes — and the EXPLAIN habits that would have caught each mistake early.'
+publishedAt: 2026-03-22
+tags: ['PostgreSQL', 'Performance', 'Databases']
+category: 'Engineering'
+---
+
+I've reviewed a lot of slow-query incidents over the years. The same five indexing mistakes account for most of them.
+
+## 1. Indexing the column, not the query
+
+An index on `created_at` does nothing for this query:
+
+```sql
+SELECT * FROM events
+WHERE account_id = $1
+ORDER BY created_at DESC
+LIMIT 50;
+```
+
+The planner needs a composite index that matches the access pattern — filter first, then sort:
+
+```sql
+CREATE INDEX events_account_recent
+ON events (account_id, created_at DESC);
+```
+
+Design indexes by starting from your five most expensive queries, not from the schema.
+
+## 2. Functions in the WHERE clause
+
+Wrapping an indexed column in a function silently disables the index:
+
+```sql del={1-2} ins={4-5}
+-- Sequential scan: the index on email is useless here
+WHERE lower(email) = 'alex@example.com'
+
+-- Either use an expression index...
+CREATE INDEX users_email_lower ON users (lower(email));
+```
+
+...or better, store the data in the shape you query it: normalize emails to lowercase on write.
+
+## 3. Believing the index is used because it exists
+
+`EXPLAIN (ANALYZE, BUFFERS)` is non-negotiable. The planner skips indexes for all sorts of good reasons — small tables, low selectivity, stale statistics — and one `ANALYZE events;` has fixed more "index isn't working" tickets than any amount of query rewriting.
+
+## 4. Partial indexes left on the table
+
+If 95% of your queries touch 5% of your rows, index just that slice:
+
+```sql
+CREATE INDEX orders_pending
+ON orders (created_at)
+WHERE status = 'pending';
+```
+
+Partial indexes are smaller, hotter in cache, and cheaper to maintain on writes. They're the highest-leverage indexing feature Postgres has, and most schemas I audit have none.
+
+## 5. Forgetting that writes pay for reads
+
+Every index is a tax on `INSERT`, `UPDATE`, and `VACUUM`. A table with twelve indexes is a table where every write does twelve extra btree updates. Drop the ones nothing uses:
+
+```sql
+SELECT indexrelname, idx_scan
+FROM pg_stat_user_indexes
+WHERE idx_scan = 0
+ORDER BY pg_relation_size(indexrelid) DESC;
+```
+
+Zero scans since the last stats reset and it's not enforcing a constraint? It's a candidate for deletion.
+
+## The meta-lesson
+
+None of these are exotic. They're all visible in one `EXPLAIN ANALYZE` and one look at `pg_stat_user_indexes`. Slow queries are rarely mysterious — they're just unexamined.

@@ -1,0 +1,35 @@
+---
+title: 'HookLog'
+description: 'Webhook debugging for teams — capture, inspect, replay, and diff webhook deliveries with shareable permalinks.'
+image: '/images/projects/hooklog.svg'
+technologies: ['TypeScript', 'React', 'PostgreSQL', 'Redis']
+github: 'https://github.com/example/hooklog'
+demo: 'https://hooklog.example.com'
+type: 'SaaS'
+status: 'active'
+year: 2024
+featured: true
+---
+
+## Overview
+
+Debugging webhooks usually means a temporary ngrok tunnel, a `console.log`, and prayer. HookLog gives every developer on a team a permanent inspection endpoint: capture deliveries, inspect headers and payloads, replay against local or staging environments, and diff two deliveries to spot what changed.
+
+## Technology stack
+
+- **Frontend:** React with server components, Tailwind CSS
+- **API:** Node.js on Fly.io, deployed in three regions
+- **Storage:** PostgreSQL for metadata, S3-compatible storage for payload bodies
+- **Queue:** Redis streams for replay scheduling and rate limiting
+
+## Challenges
+
+**Payload storage economics.** Webhook payloads are 2KB on average but unbounded in the tail — one customer's ERP system sends 40MB XML deliveries. Bodies over a threshold stream directly to object storage, with only a preview and metadata in Postgres. This kept the database small enough for cheap point-in-time recovery.
+
+**Replay safety.** Replaying a production webhook against a local environment is one wrong click away from replaying it against production. Replay targets are allowlisted per-project, and anything pointing at a production URL requires an explicit confirmation with the diff shown inline.
+
+## Results
+
+- 900 weekly active developers across ~120 teams
+- p99 capture-to-visible latency of 180ms
+- The diff view — a weekend feature — is the most-used screen in the product

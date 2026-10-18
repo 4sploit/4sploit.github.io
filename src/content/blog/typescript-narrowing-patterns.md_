@@ -1,0 +1,87 @@
+---
+title: 'TypeScript narrowing patterns I reach for every week'
+description: 'Discriminated unions, assertion functions, and the satisfies operator — a working tour of the narrowing techniques that make TypeScript feel like a superpower.'
+publishedAt: 2026-05-04
+tags: ['TypeScript', 'Patterns']
+category: 'Engineering'
+---
+
+Most TypeScript pain comes from fighting the narrowing engine instead of working with it. These are the patterns I use constantly — not clever tricks, just the bread and butter that keeps a codebase honest.
+
+## Discriminated unions over optional fields
+
+The single biggest improvement you can make to a data model is replacing "bag of optionals" with a tagged union:
+
+```ts title="src/types.ts" del={1-5} ins={7-10}
+interface Request {
+  status: string;
+  data?: User[];
+  error?: string;
+}
+
+type Request =
+  | { status: 'loading' }
+  | { status: 'success'; data: User[] }
+  | { status: 'error'; error: string };
+```
+
+Now `request.data` simply does not exist unless `status === 'success'`. Whole categories of "why is data undefined here" bugs stop compiling.
+
+## Assertion functions at the boundaries
+
+Data from the outside world — APIs, forms, file reads — should pass through an assertion exactly once:
+
+```ts title="src/lib/assert.ts"
+export function assertUser(value: unknown): asserts value is User {
+  if (
+    typeof value !== 'object' ||
+    value === null ||
+    typeof (value as User).id !== 'string'
+  ) {
+    throw new Error('Invalid user payload');
+  }
+}
+```
+
+After the call site, TypeScript treats the value as `User` with no casting. The unsafe cast lives in one audited function instead of being scattered across the codebase as `as User`.
+
+## `satisfies` for config objects
+
+`satisfies` checks a value against a type *without* widening it:
+
+```ts
+const routes = {
+  home: '/',
+  blog: '/blog',
+  projects: '/projects',
+} satisfies Record<string, `/${string}`>;
+
+routes.blog; // type is '/blog', not string
+```
+
+You get validation *and* precise literal types. Before `satisfies`, you had to choose one.
+
+## Exhaustiveness with `never`
+
+Close the loop on unions with a default branch that fails to compile when a variant is added:
+
+```ts {8-9}
+function label(status: Request['status']): string {
+  switch (status) {
+    case 'loading':
+      return 'Loading…';
+    case 'success':
+      return 'Done';
+    case 'error':
+      return 'Failed';
+    default:
+      return status satisfies never;
+  }
+}
+```
+
+Add a `'cancelled'` variant next quarter and this function becomes a compile error instead of a silent bug.
+
+## The habit that ties it together
+
+Narrow at the edges, trust the middle. If every input passes through a discriminated union or an assertion function on entry, the core of your application never touches `unknown`, never casts, and never surprises you at runtime.

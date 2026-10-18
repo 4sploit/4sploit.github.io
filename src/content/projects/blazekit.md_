@@ -1,0 +1,45 @@
+---
+title: 'BlazeKit'
+description: 'A zero-config toolkit for building and deploying edge-rendered web apps. One command from git clone to global deployment.'
+image: '/images/projects/blazekit.gif'
+technologies: ['TypeScript', 'Node.js', 'esbuild', 'Cloudflare']
+github: 'https://github.com/example/blazekit'
+demo: 'https://blazekit.example.com'
+documentation: 'https://blazekit.example.com/docs'
+type: 'Open Source'
+status: 'active'
+year: 2025
+featured: true
+---
+
+## Overview
+
+BlazeKit started as an internal tool to stop copy-pasting the same build pipeline between projects. It bundles routing, asset hashing, and deployment into a single dependency with sensible defaults and zero required configuration.
+
+```bash
+npx blazekit create my-app
+cd my-app
+npx blazekit ship
+```
+
+Thirty seconds later the app is live on a global edge network.
+
+## Technology stack
+
+- **Core:** TypeScript, compiled with esbuild for sub-second builds
+- **Runtime:** Web-standard APIs only — runs on Cloudflare Workers, Deno Deploy, and Node
+- **Testing:** Vitest with an in-memory edge runtime simulator
+- **Deployment:** Direct API integration with Cloudflare and Fly.io
+
+## Challenges
+
+The hardest problem was **watch-mode correctness**. Naive file watching rebuilds too much (slow) or too little (stale output). BlazeKit builds a module graph and invalidates precisely the affected subtree, which keeps rebuilds under 50ms even on large projects.
+
+The second problem was **platform drift**: every edge runtime implements web standards slightly differently. The compatibility layer is 200 lines of shims and 2,000 lines of tests — roughly the right ratio for this kind of work.
+
+## Results
+
+- 4,100+ GitHub stars, 40+ contributors
+- Median rebuild time of 38ms on a 500-module app
+- Used in production by three companies I know of, which is three more than expected
+- Taught me more about module resolution than I ever wanted to know

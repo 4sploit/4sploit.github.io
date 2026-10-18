@@ -1,0 +1,42 @@
+---
+title: 'tsconfig-doctor'
+description: 'A CLI that audits your tsconfig.json, explains what each flag actually does, and suggests the strictest config your codebase can survive.'
+image: '/images/projects/tsconfig-doctor.svg'
+technologies: ['TypeScript', 'Node.js']
+github: 'https://github.com/example/tsconfig-doctor'
+npm: 'https://www.npmjs.com/package/tsconfig-doctor'
+type: 'Open Source'
+status: 'maintained'
+year: 2023
+---
+
+## Overview
+
+Every `tsconfig.json` is a fossil record of the project's history — flags copied from blog posts, options that stopped doing anything four TypeScript versions ago, and `strict: false` because someone was in a hurry in 2021.
+
+`tsconfig-doctor` reads your config and your codebase, then tells you:
+
+```bash
+npx tsconfig-doctor
+
+✓ 12 options are fine
+⚠ "target": "es5" — your Node 20 runtime supports es2023
+⚠ "moduleResolution": "node" — deprecated, use "bundler"
+✗ "strictNullChecks": off — enabling would surface 14 errors (report: ./doctor-report.md)
+```
+
+The killer feature: it *counts the errors* each stricter flag would introduce, so "turn on strict mode" becomes a scoped, estimable task instead of a leap of faith.
+
+## Technology stack
+
+Pure TypeScript with zero runtime dependencies. Uses the TypeScript compiler API to type-check the project against candidate configs in memory.
+
+## Challenges
+
+Running the compiler repeatedly against large projects was too slow for a CLI. The fix was incremental: check candidate flags in a single program instance with a shared module graph, reusing the parse and bind phases. Audit time on a 3,000-file codebase dropped from 4 minutes to 20 seconds.
+
+## Results
+
+- 60k+ downloads per month on npm
+- Adopted as a CI check in several large open-source repos
+- Maintenance mode by design: it does one thing, and it's done

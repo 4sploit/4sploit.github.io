@@ -1,0 +1,34 @@
+---
+title: 'PixelPulse'
+description: 'A real-time collaborative pixel-art canvas — a weekend experiment in CRDTs and WebSockets that briefly hosted 400 concurrent artists.'
+image: '/images/projects/pixelpulse.svg'
+technologies: ['TypeScript', 'WebSockets', 'Redis', 'Canvas API']
+github: 'https://github.com/example/pixelpulse'
+type: 'Experiment'
+status: 'archived'
+year: 2022
+---
+
+## Overview
+
+Inspired by Reddit's r/place, PixelPulse is a shared 1024×1024 canvas where anyone can place one pixel every ten seconds. Built in a weekend to answer one question: how hard is real-time state synchronization at moderate scale, really?
+
+Answer: the sync is easy, the abuse prevention is hard.
+
+## Technology stack
+
+- **Server:** Node.js with uWebSockets.js, one process, vertical scaling only
+- **State:** The canvas is a single 1MB `Uint8Array` in Redis, snapshotted to disk every minute
+- **Client:** Vanilla TypeScript and the Canvas API — no framework, 11KB gzipped
+
+## Challenges
+
+**Delta compression.** Broadcasting every pixel to every client works until ~50 concurrent users. The fix was batching changes into 100ms ticks and broadcasting deltas as packed binary frames — coordinates and color index in 5 bytes per pixel.
+
+**Rate-limit evasion.** Within hours of a small Hacker News spike, someone was placing pixels via a headless-browser botnet. Cookie-based limits became IP-based token buckets, then a proof-of-work challenge for suspicious traffic. The arms race was more educational than the CRDT literature.
+
+## Results
+
+- Peaked at 400 concurrent users on a $6/month VPS at 30% CPU
+- The final canvas — mostly ferrets and flags, as predicted — is preserved in the repo
+- Archived once the experiment answered its question; the write-up lives on in the blog

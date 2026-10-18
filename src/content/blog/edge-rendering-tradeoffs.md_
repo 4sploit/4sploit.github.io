@@ -1,0 +1,59 @@
+---
+title: 'Edge rendering: the trade-offs nobody puts in the launch post'
+description: 'We moved a production app to edge rendering and back again for half of it. What the latency numbers actually said, and a decision framework for when the edge earns its complexity.'
+publishedAt: 2026-01-30
+tags: ['Architecture', 'Performance', 'Web']
+category: 'Engineering'
+---
+
+Last year we moved a customer-facing dashboard to edge rendering. Six months later we moved half of it back. Both decisions were correct. Here's the framework that would have saved us the detour.
+
+## What the edge actually buys you
+
+Edge rendering moves your *compute* close to users. It does nothing about your *data*. That distinction is the entire story.
+
+For a page that renders from nothing — marketing pages, docs, personalization from a cookie — the edge is a strict win. Time-to-first-byte drops from ~300ms to ~40ms globally, and there's no origin to keep warm.
+
+For a page that needs your database, the request path becomes:
+
+```text
+user → edge (40ms) → database in us-east-1 (280ms) → edge → user
+```
+
+You moved the rendering next to the user and left the data on the other side of the ocean. One data round-trip erases the entire edge benefit; three round-trips make it *slower* than rendering at the origin, where the database is 2ms away.
+
+## The waterfall trap
+
+ORMs make sequential queries invisible. This innocent-looking loader does four serial round-trips:
+
+```ts title="app/dashboard/loader.ts" {3-6}
+export async function loader({ userId }: Args) {
+  const user = await db.user.find(userId);
+  const team = await db.team.find(user.teamId);
+  const projects = await db.projects.byTeam(team.id);
+  const usage = await db.usage.byTeam(team.id);
+  return { user, team, projects, usage };
+}
+```
+
+At the origin: 4 × 2ms — nobody notices. At the edge: 4 × 280ms — your dashboard takes over a second before rendering starts. The edge doesn't just expose latency, it multiplies whatever query discipline you already lacked.
+
+## The decision framework
+
+Render at the edge when:
+
+- The page needs **zero** data round-trips (static, cached, or cookie-derived)
+- The data itself is replicated to the edge (KV, D1 read replicas, CDN-cached APIs)
+- You can batch the page's data into **one** request to a regional API
+
+Render at the origin when:
+
+- The page needs your primary database more than once
+- You depend on libraries that assume Node (native modules, filesystem access)
+- Debugging matters more than TTFB — origin observability is still years ahead
+
+## Where we landed
+
+Marketing, docs, and the login shell render at the edge. The dashboard renders in the region where the database lives, behind a CDN that caches the shell. TTFB for the app is 90ms globally — not the 40ms of pure edge, but with none of the waterfall risk.
+
+The edge is a real tool, not a default. Put compute next to whatever it talks to most — sometimes that's the user, but more often than the launch posts admit, it's your database.

@@ -1,0 +1,109 @@
+---
+title: 'My developer tooling stack for 2026'
+description: 'The editors, terminals, CLI tools, and workflow glue I actually use daily — with honest notes on what earned its place and what got cut.'
+publishedAt: 2026-07-15
+tags: ['Tooling', 'TypeScript', 'Workflow']
+category: 'Tooling'
+featured: true
+---
+
+Tool posts age badly, so here's the honest version: this is what survived a year of real work, and what didn't. This post is also MDX — it uses interactive components inside markdown, which this theme supports out of the box.
+
+## The rules
+
+<Callout type="tip" title="One in, one out">
+  Every new tool has to replace something. Tool collections grow entropy — the stack should get
+  smaller and sharper over time, not wider.
+</Callout>
+
+Three questions before anything gets installed:
+
+1. Does it remove a step from something I do daily?
+2. Will it still work if the company behind it disappears?
+3. Can I configure it in a file that lives in a dotfiles repo?
+
+## Package manager
+
+Still pnpm. The strictness that makes it occasionally annoying is exactly what makes monorepos survivable:
+
+<Tabs tabs={['pnpm', 'npm', 'bun']}>
+  <div>
+
+```bash
+pnpm add astro
+pnpm dlx create-astro@latest
+```
+
+  </div>
+  <div>
+
+```bash
+npm install astro
+npx create-astro@latest
+```
+
+  </div>
+  <div>
+
+```bash
+bun add astro
+bunx create-astro@latest
+```
+
+  </div>
+</Tabs>
+
+## The CLI layer
+
+The unglamorous winners, in order of keystrokes saved:
+
+```bash title="daily-drivers.sh"
+fzf        # fuzzy-find everything: files, history, branches
+ripgrep    # grep, but you never wait for it
+fd         # find with defaults that make sense
+jq         # JSON surgery in pipelines
+just       # make, minus the tab-based footguns
+direnv     # per-project env vars that load themselves
+```
+
+<Callout type="warning" title="The one that got cut">
+  I dropped my custom git aliases collection. Muscle memory for 40 aliases is a tax you pay on
+  every machine you touch. I kept six.
+</Callout>
+
+## Editor
+
+VS Code with fewer than ten extensions. The controversial part of the config:
+
+```json title=".vscode/settings.json" {4-5}
+{
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "editor.inlineSuggest.enabled": true,
+  "workbench.activityBar.location": "hidden",
+  "files.autoSave": "onFocusChange"
+}
+```
+
+Hiding the activity bar sounds extreme until you realize every panel has a keybinding and your eyes stop drifting left.
+
+## What ties it together
+
+A `justfile` in every repo, so that muscle memory transfers between projects:
+
+```make title="justfile"
+dev:
+    pnpm astro dev
+
+check:
+    pnpm astro check && pnpm eslint .
+
+ship: check
+    pnpm astro build && wrangler pages deploy dist
+```
+
+`just dev`, `just check`, `just ship` — same three commands in every project I own, regardless of what's underneath.
+
+## The honest summary
+
+The stack is boring on purpose. Every exciting tool I adopted in the last five years either became boring (good) or got deleted (also good). Optimize for the tools you'll still be using when the trend cycle moves on.

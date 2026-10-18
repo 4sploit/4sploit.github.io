@@ -1,0 +1,108 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/ui/Icon.astro';
+
+interface UsesItem {
+  name: string;
+  description: string;
+  url?: string;
+}
+
+const sections: Array<{ title: string; items: UsesItem[] }> = [
+  {
+    title: 'Hardware',
+    items: [
+      { name: 'MacBook Pro 14" (M3 Pro)', description: 'Daily driver — quiet, fast, great battery.' },
+      { name: 'Dell U2723QE 27" 4K', description: 'Sharp text is non-negotiable for long coding days.' },
+      { name: 'Keychron Q1 Pro', description: 'Gateron Brown switches, QMK firmware.' },
+      { name: 'Logitech MX Master 3S', description: 'The horizontal scroll wheel earns its keep.' },
+      { name: 'Shure MV7', description: 'For calls, screencasts, and podcast guesting.' },
+    ],
+  },
+  {
+    title: 'Software',
+    items: [
+      { name: 'VS Code', description: 'With Vim keybindings and a minimal setup.', url: 'https://code.visualstudio.com' },
+      { name: 'Ghostty', description: 'Fast native terminal with zsh + starship prompt.', url: 'https://ghostty.org' },
+      { name: 'Arc', description: 'Browser profiles keep work and personal separate.', url: 'https://arc.net' },
+      { name: 'Raycast', description: 'Launcher, clipboard history, window management.', url: 'https://raycast.com' },
+      { name: 'Obsidian', description: 'Notes, drafts, and a zettelkasten I mostly maintain.', url: 'https://obsidian.md' },
+    ],
+  },
+  {
+    title: 'Development stack',
+    items: [
+      { name: 'TypeScript', description: 'Default language for everything that ships.', url: 'https://www.typescriptlang.org' },
+      { name: 'Astro', description: 'Content sites and this very theme.', url: 'https://astro.build' },
+      { name: 'React', description: 'For app-like interactive UIs.', url: 'https://react.dev' },
+      { name: 'PostgreSQL', description: 'Boring, reliable, and always the right answer.', url: 'https://www.postgresql.org' },
+      { name: 'Fly.io + Cloudflare', description: 'Compute close to users, static at the edge.' },
+    ],
+  },
+  {
+    title: 'Workflow',
+    items: [
+      { name: 'Trunk-based git', description: 'Short-lived branches, squash merges, conventional commits.' },
+      { name: 'CI on every push', description: 'GitHub Actions: typecheck, lint, test, preview deploy.' },
+      { name: 'Preview-first deploys', description: 'Every PR gets a URL; production deploys are boring.' },
+      { name: 'Weekly review', description: 'Friday afternoons: triage issues, clean up branches, plan the week.' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Uses"
+  description="Hardware, software, and the development stack I use every day."
+>
+  <div class="container-page py-10 sm:py-14">
+    <header>
+      <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">Uses</h1>
+      <p class="mt-3 max-w-lg text-base leading-relaxed text-muted-foreground">
+        The hardware, software, and workflow behind my day-to-day work. Inspired by
+        <a
+          href="https://uses.tech"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-accent underline decoration-accent/40 underline-offset-3 hover:decoration-accent">uses.tech</a
+        >.
+      </p>
+    </header>
+
+    <div class="mt-10 space-y-12" data-pagefind-body>
+      {
+        sections.map((section) => (
+          <section>
+            <h2 class="mb-4 text-lg font-semibold tracking-tight">{section.title}</h2>
+            <ul class="divide-y divide-border/60 rounded-xl border border-border bg-card/60">
+              {section.items.map((item) => (
+                <li class="flex items-start justify-between gap-4 px-5 py-3.5">
+                  <div class="min-w-0">
+                    <p class="text-sm font-medium">
+                      {item.url ? (
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="inline-flex items-center gap-1.5 transition-colors hover:text-accent"
+                        >
+                          {item.name}
+                          <Icon name="external-link" size={12} class="text-muted-foreground" />
+                        </a>
+                      ) : (
+                        item.name
+                      )}
+                    </p>
+                    <p class="mt-0.5 text-sm leading-relaxed text-muted-foreground">
+                      {item.description}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
