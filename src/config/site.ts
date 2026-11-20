@@ -110,7 +110,7 @@ export const siteConfig: SiteConfig = {
   author: {
     name: 'Mahmoud Mahajna',
     email: 'mahmod.mahajnaa@outlook.com',
-    avatar: '/images/avatar.svg',
+    avatar: '/images/avatar.webp',
     role: 'Senior Software Enginner | Security Researcher',
     location: 'Haifa, IL',
   },
